@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Navigate, useOutletContext } from 'react-router-dom';
+import { Navigate, useOutletContext, Link } from 'react-router-dom';
 import { useCustomerAuth } from '@/hooks/useCustomerAuth';
-import { listMyAppointments, cancelMyAppointment } from '@/services/customerPortal';
+import {
+  listMyAppointments,
+  cancelMyAppointment,
+  exportMyData,
+  requestMyDataDeletion,
+} from '@/services/customerPortal';
 import { customerSignOut } from '@/services/customerAuth';
 import { Appointment, Barbershop } from '@/types';
 import { Card } from '@/components/ui/Card';
@@ -40,6 +45,35 @@ export function ContaPage() {
       reload();
     } catch (err: any) {
       alert(friendlyError(err, 'Não foi possível cancelar.'));
+    }
+  }
+
+  async function handleDownloadData() {
+    try {
+      const data = await exportMyData();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'meus-dados.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      alert(friendlyError(err, 'Não foi possível gerar o arquivo com seus dados.'));
+    }
+  }
+
+  async function handleDeleteData() {
+    const confirmed = confirm(
+      'Isso vai remover permanentemente seu nome, e-mail de contato e WhatsApp associados aos seus agendamentos, e você deixará de ver seu histórico aqui. Esta ação não pode ser desfeita. Deseja continuar?'
+    );
+    if (!confirmed) return;
+    try {
+      await requestMyDataDeletion();
+      await customerSignOut();
+      window.location.href = '/';
+    } catch (err) {
+      alert(friendlyError(err, 'Não foi possível concluir a exclusão dos seus dados. Tente novamente.'));
     }
   }
 
@@ -119,6 +153,39 @@ export function ContaPage() {
           }}
         />
       )}
+
+      <h2 className="mb-3 mt-10 font-display text-lg font-semibold tracking-tight">Privacidade</h2>
+      <Card className="flex flex-col gap-3 p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-sm font-medium text-ink">Baixar meus dados</p>
+            <p className="text-sm text-graphite">Uma cópia em JSON da sua conta e do seu histórico de agendamentos.</p>
+          </div>
+          <Button variant="secondary" size="sm" onClick={handleDownloadData}>
+            Baixar
+          </Button>
+        </div>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-100 pt-3">
+          <div>
+            <p className="text-sm font-medium text-ink">Excluir meus dados</p>
+            <p className="text-sm text-graphite">Remove seu nome, e-mail e WhatsApp associados aos agendamentos.</p>
+          </div>
+          <Button variant="danger" size="sm" onClick={handleDeleteData}>
+            Excluir
+          </Button>
+        </div>
+        <p className="text-xs text-graphite">
+          Veja também a{' '}
+          <Link to="/privacidade" className="underline">
+            Política de Privacidade
+          </Link>{' '}
+          e os{' '}
+          <Link to="/termos" className="underline">
+            Termos de Uso
+          </Link>
+          .
+        </p>
+      </Card>
     </div>
   );
 }

@@ -24,6 +24,7 @@ const SAFE_MESSAGE_PATTERNS = [
   /já existe uma conta/i,
   /bloqueada?/i,
   /bloqueado?/i,
+  /aceitar os termos/i,
 ];
 
 export function friendlyError(err: unknown, fallback = 'Algo deu errado. Tente novamente em instantes.'): string {

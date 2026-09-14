@@ -15,11 +15,16 @@ export function ContaCadastroPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [awaitingConfirmation, setAwaitingConfirmation] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const redirectTo = (location.state as any)?.from ?? '/conta';
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    if (!acceptedTerms) {
+      setError('Você precisa aceitar os Termos de Uso e a Política de Privacidade para continuar.');
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -82,7 +87,26 @@ export function ContaCadastroPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
           {error && <p className="text-sm text-red-600">{error}</p>}
-          <Button type="submit" disabled={loading}>
+          <label className="flex items-start gap-2 text-sm text-graphite">
+            <input
+              type="checkbox"
+              className="mt-0.5"
+              checked={acceptedTerms}
+              onChange={(e) => setAcceptedTerms(e.target.checked)}
+            />
+            <span>
+              Li e aceito os{' '}
+              <Link to="/termos" target="_blank" className="font-medium text-ink underline">
+                Termos de Uso
+              </Link>{' '}
+              e a{' '}
+              <Link to="/privacidade" target="_blank" className="font-medium text-ink underline">
+                Política de Privacidade
+              </Link>
+              .
+            </span>
+          </label>
+          <Button type="submit" disabled={loading || !acceptedTerms}>
             {loading ? 'Criando conta…' : 'Criar conta'}
           </Button>
         </form>

@@ -9,6 +9,9 @@ import { ContaLoginPage } from '@/pages/public/ContaLoginPage';
 import { ContaCadastroPage } from '@/pages/public/ContaCadastroPage';
 import { ContaPage } from '@/pages/public/ContaPage';
 import { ContaNovaSenhaPage } from '@/pages/public/ContaNovaSenhaPage';
+import { TermsPage } from '@/pages/public/legal/TermsPage';
+import { PrivacyPage } from '@/pages/public/legal/PrivacyPage';
+import { CookiesPage } from '@/pages/public/legal/CookiesPage';
 import { LoginPage } from '@/pages/admin/LoginPage';
 import { ResetPasswordPage } from '@/pages/admin/ResetPasswordPage';
 import { InviteRedeemPage } from '@/pages/admin/InviteRedeemPage';
@@ -36,6 +39,9 @@ export default function App() {
         <Route path="/conta/cadastro" element={<ContaCadastroPage />} />
         <Route path="/conta/nova-senha" element={<ContaNovaSenhaPage />} />
         <Route path="/conta" element={<ContaPage />} />
+        <Route path="/termos" element={<TermsPage />} />
+        <Route path="/privacidade" element={<PrivacyPage />} />
+        <Route path="/cookies" element={<CookiesPage />} />
       </Route>
 
       {/* Convite de equipe (admin/caixa/barbeiro se autocadastrando) */}

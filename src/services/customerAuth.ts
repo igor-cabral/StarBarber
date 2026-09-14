@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { buildConsentMetadata } from '@/utils/legal';
 
 export async function customerSignUp(params: {
   email: string;
@@ -10,7 +11,7 @@ export async function customerSignUp(params: {
     email: params.email,
     password: params.password,
     options: {
-      data: { full_name: params.fullName, phone: params.phone },
+      data: { full_name: params.fullName, phone: params.phone, ...buildConsentMetadata() },
     },
   });
   if (error) throw error;

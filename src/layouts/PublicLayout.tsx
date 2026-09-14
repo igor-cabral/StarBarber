@@ -2,6 +2,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useBarbershop } from '@/hooks/useBarbershop';
 import { useCustomerAuth } from '@/hooks/useCustomerAuth';
 import { LoadingState, ErrorState } from '@/components/ui/States';
+import { CookieConsentBanner } from '@/components/legal/CookieConsentBanner';
 import { Menu, X, UserCircle2, ShieldAlert } from 'lucide-react';
 import { useState } from 'react';
 
@@ -18,11 +19,12 @@ export function PublicLayout() {
   const location = useLocation();
   const isBookingFlow = location.pathname.startsWith('/agendar');
   const isAccountArea = location.pathname.startsWith('/conta');
+  const isLegalPage = ['/termos', '/privacidade', '/cookies'].includes(location.pathname);
 
   if (loading) return <LoadingState label="Carregando barbearia…" />;
   if (error || !barbershop) return <ErrorState message={error ?? 'Barbearia não encontrada.'} />;
 
-  if (!barbershop.active && !isAccountArea) {
+  if (!barbershop.active && !isAccountArea && !isLegalPage) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-3 px-5 text-center">
         <ShieldAlert size={32} className="text-graphite" />
@@ -102,12 +104,21 @@ export function PublicLayout() {
 
       {!isBookingFlow && (
         <footer className="border-t border-zinc-100 py-10">
-          <div className="mx-auto max-w-6xl px-5 text-sm text-graphite">
-            <p>{barbershop.name} — {barbershop.address}</p>
-            {barbershop.whatsapp && <p className="mt-1">WhatsApp: {barbershop.whatsapp}</p>}
+          <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 text-sm text-graphite sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p>{barbershop.name} — {barbershop.address}</p>
+              {barbershop.whatsapp && <p className="mt-1">WhatsApp: {barbershop.whatsapp}</p>}
+            </div>
+            <div className="flex gap-4">
+              <Link to="/termos" className="hover:text-ink">Termos de Uso</Link>
+              <Link to="/privacidade" className="hover:text-ink">Privacidade</Link>
+              <Link to="/cookies" className="hover:text-ink">Cookies</Link>
+            </div>
           </div>
         </footer>
       )}
+
+      {!isBookingFlow && <CookieConsentBanner />}
     </div>
   );
 }

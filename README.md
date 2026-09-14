@@ -21,6 +21,8 @@ React + Vite + TypeScript + Tailwind CSS + Supabase (Postgres + Auth + RLS) + Re
    9. `0009_appointment_integrity.sql` — correção de auditoria: valida no banco que profissional, serviço e barbearia são consistentes entre si antes de criar um agendamento.
    10. `0010_fix_rls_recursion.sql` — correção crítica: recursão infinita entre as policies de `appointments` e `customers`.
    11. `0011_security_hardening.sql` — search_path fixo em toda função SECURITY DEFINER, menor privilégio em `notifications` (barbeiro só vê as dos próprios agendamentos), e trava de estado final (agendamento cancelado/concluído não pode mais ser alterado).
+   12. `0012_lgpd_consent.sql` — registro de consentimento (LGPD), exportação e anonimização de dados do cliente.
+   13. `0013_lgpd_hardening.sql` — correção de auditoria: servidor não confia mais em data/versão do consentimento vindas do cliente (só um booleano), bloqueia agendar/entrar na equipe sem aceite, e revoga `UPDATE` de `customers`/`profiles` para `anon`/`authenticated` (só as funções do próprio banco escrevem nessas tabelas).
 3. Em **Project Settings → API**, copie:
    - `Project URL` → `VITE_SUPABASE_URL`
    - `anon public key` → `VITE_SUPABASE_ANON_KEY`

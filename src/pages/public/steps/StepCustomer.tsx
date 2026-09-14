@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/Card';
 import { LoadingState } from '@/components/ui/States';
 import { createCustomerAppointment } from '@/services/customerBooking';
 import { formatPrice, formatDuration, formatLongDate, formatTime } from '@/utils/format';
+import { friendlyError } from '@/utils/errors';
 
 export function StepCustomer({ barbershop }: { barbershop: Barbershop }) {
   const { selection, update } = useBooking();
@@ -52,12 +53,11 @@ export function StepCustomer({ barbershop }: { barbershop: Barbershop }) {
       });
       navigate(`/agendar/confirmado/${result.code}`);
     } catch (err: any) {
-      const message: string = err?.message ?? '';
-      const isKnownMessage = /reservado|inválido|inativo|logado/i.test(message);
       setError(
-        isKnownMessage
-          ? message
-          : 'Não foi possível confirmar o agendamento. Verifique sua conexão e tente novamente — se o problema continuar, escolha outro horário.'
+        friendlyError(
+          err,
+          'Não foi possível confirmar o agendamento. Verifique sua conexão e tente novamente — se o problema continuar, escolha outro horário.'
+        )
       );
     } finally {
       setSubmitting(false);
