@@ -2,27 +2,36 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useBarbershop } from '@/hooks/useBarbershop';
 import { useCustomerAuth } from '@/hooks/useCustomerAuth';
 import { LoadingState, ErrorState } from '@/components/ui/States';
+import { BarbershopNotFoundPage } from '@/pages/public/BarbershopNotFoundPage';
 import { CookieConsentBanner } from '@/components/legal/CookieConsentBanner';
+import { publicPath } from '@/utils/publicPath';
 import { Menu, X, UserCircle2, ShieldAlert } from 'lucide-react';
 import { useState } from 'react';
 
-const NAV_LINKS = [
-  { to: '/', label: 'Início' },
-  { to: '/#servicos', label: 'Serviços' },
-  { to: '/#profissionais', label: 'Profissionais' },
-];
-
 export function PublicLayout() {
-  const { barbershop, loading, error } = useBarbershop();
+  const { barbershop, loading, error, notFound } = useBarbershop();
   const { user } = useCustomerAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
-  const isBookingFlow = location.pathname.startsWith('/agendar');
-  const isAccountArea = location.pathname.startsWith('/conta');
-  const isLegalPage = ['/termos', '/privacidade', '/cookies'].includes(location.pathname);
 
   if (loading) return <LoadingState label="Carregando barbearia…" />;
+  if (notFound) return <BarbershopNotFoundPage />;
   if (error || !barbershop) return <ErrorState message={error ?? 'Barbearia não encontrada.'} />;
+
+  const slug = barbershop.slug;
+  const base = publicPath(slug);
+  // caminho relativo ao tenant atual (ex: "/b/barbearia-prime/agendar" -> "/agendar")
+  const localPath = location.pathname.startsWith(base) ? location.pathname.slice(base.length) || '/' : location.pathname;
+
+  const NAV_LINKS = [
+    { to: base, label: 'Início' },
+    { to: `${base}#servicos`, label: 'Serviços' },
+    { to: `${base}#profissionais`, label: 'Profissionais' },
+  ];
+
+  const isBookingFlow = localPath.startsWith('/agendar');
+  const isAccountArea = localPath.startsWith('/conta');
+  const isLegalPage = ['/termos', '/privacidade', '/cookies'].includes(localPath);
 
   if (!barbershop.active && !isAccountArea && !isLegalPage) {
     return (
@@ -36,11 +45,13 @@ export function PublicLayout() {
     );
   }
 
+  const accountLink = user ? publicPath(slug, '/conta') : publicPath(slug, '/conta/entrar');
+
   return (
     <div className="min-h-screen bg-paper text-ink">
       <header className="sticky top-0 z-30 border-b border-zinc-100 bg-paper/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-          <Link to="/" className="font-display text-lg font-semibold tracking-tight">
+          <Link to={base} className="font-display text-lg font-semibold tracking-tight">
             {barbershop.name}
           </Link>
 
@@ -54,15 +65,12 @@ export function PublicLayout() {
                 ))}
               </nav>
               <div className="hidden items-center gap-3 md:flex">
-                <Link
-                  to={user ? '/conta' : '/conta/entrar'}
-                  className="flex items-center gap-1.5 text-sm text-graphite hover:text-ink"
-                >
+                <Link to={accountLink} className="flex items-center gap-1.5 text-sm text-graphite hover:text-ink">
                   <UserCircle2 size={18} />
                   {user ? 'Minha conta' : 'Entrar'}
                 </Link>
                 <Link
-                  to="/agendar"
+                  to={publicPath(slug, '/agendar')}
                   className="rounded-xl bg-ink px-5 py-2.5 text-sm font-medium text-paper transition-opacity hover:opacity-90"
                 >
                   Agendar
@@ -83,11 +91,11 @@ export function PublicLayout() {
                   {link.label}
                 </a>
               ))}
-              <Link to={user ? '/conta' : '/conta/entrar'} className="text-sm text-graphite" onClick={() => setMenuOpen(false)}>
+              <Link to={accountLink} className="text-sm text-graphite" onClick={() => setMenuOpen(false)}>
                 {user ? 'Minha conta' : 'Entrar'}
               </Link>
               <Link
-                to="/agendar"
+                to={publicPath(slug, '/agendar')}
                 className="rounded-xl bg-ink px-5 py-2.5 text-center text-sm font-medium text-paper"
                 onClick={() => setMenuOpen(false)}
               >
@@ -110,15 +118,15 @@ export function PublicLayout() {
               {barbershop.whatsapp && <p className="mt-1">WhatsApp: {barbershop.whatsapp}</p>}
             </div>
             <div className="flex gap-4">
-              <Link to="/termos" className="hover:text-ink">Termos de Uso</Link>
-              <Link to="/privacidade" className="hover:text-ink">Privacidade</Link>
-              <Link to="/cookies" className="hover:text-ink">Cookies</Link>
+              <Link to={publicPath(slug, '/termos')} className="hover:text-ink">Termos de Uso</Link>
+              <Link to={publicPath(slug, '/privacidade')} className="hover:text-ink">Privacidade</Link>
+              <Link to={publicPath(slug, '/cookies')} className="hover:text-ink">Cookies</Link>
             </div>
           </div>
         </footer>
       )}
 
-      {!isBookingFlow && <CookieConsentBanner />}
+      {!isBookingFlow && <CookieConsentBanner slug={slug} />}
     </div>
   );
 }

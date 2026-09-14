@@ -10,6 +10,7 @@ import { LoadingState } from '@/components/ui/States';
 import { createCustomerAppointment } from '@/services/customerBooking';
 import { formatPrice, formatDuration, formatLongDate, formatTime } from '@/utils/format';
 import { friendlyError } from '@/utils/errors';
+import { publicPath } from '@/utils/publicPath';
 
 export function StepCustomer({ barbershop }: { barbershop: Barbershop }) {
   const { selection, update } = useBooking();
@@ -51,7 +52,7 @@ export function StepCustomer({ barbershop }: { barbershop: Barbershop }) {
         customerName: selection.customerName,
         customerWhatsapp: selection.customerWhatsapp,
       });
-      navigate(`/agendar/confirmado/${result.code}`);
+      navigate(publicPath(barbershop.slug, `/agendar/confirmado/${result.code}`));
     } catch (err: any) {
       setError(
         friendlyError(
@@ -79,12 +80,12 @@ export function StepCustomer({ barbershop }: { barbershop: Barbershop }) {
           Entre ou crie sua conta para confirmar o agendamento e poder gerenciá-lo depois.
         </p>
         <div className="flex flex-col gap-3">
-          <Link to="/conta/entrar" state={{ from: '/agendar' }}>
+          <Link to={publicPath(barbershop.slug, '/conta/entrar')} state={{ from: publicPath(barbershop.slug, '/agendar') }}>
             <Button size="lg" fullWidth>
               Entrar
             </Button>
           </Link>
-          <Link to="/conta/cadastro" state={{ from: '/agendar' }}>
+          <Link to={publicPath(barbershop.slug, '/conta/cadastro')} state={{ from: publicPath(barbershop.slug, '/agendar') }}>
             <Button variant="secondary" size="lg" fullWidth>
               Criar conta
             </Button>

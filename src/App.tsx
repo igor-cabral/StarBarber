@@ -27,21 +27,42 @@ import { SettingsPage } from '@/pages/admin/SettingsPage';
 import { MasterLoginPage } from '@/pages/master/MasterLoginPage';
 import { MasterDashboardPage } from '@/pages/master/MasterDashboardPage';
 
+/**
+ * Rotas públicas de uma barbearia — reaproveitadas tanto em
+ * /b/:slug/* (multi-tenant "de verdade") quanto em /* (compatibilidade
+ * de desenvolvimento, resolvendo pelo DEFAULT_BARBERSHOP_SLUG dentro
+ * de useBarbershop). Definidas uma única vez para não duplicar lógica.
+ */
+function PublicTenantRoutes() {
+  return (
+    <>
+      <Route index element={<HomePage />} />
+      <Route path="agendar" element={<BookingFlowPage />} />
+      <Route path="agendar/confirmado/:code" element={<ConfirmationPage />} />
+      <Route path="conta/entrar" element={<ContaLoginPage />} />
+      <Route path="conta/cadastro" element={<ContaCadastroPage />} />
+      <Route path="conta/nova-senha" element={<ContaNovaSenhaPage />} />
+      <Route path="conta" element={<ContaPage />} />
+      <Route path="termos" element={<TermsPage />} />
+      <Route path="privacidade" element={<PrivacyPage />} />
+      <Route path="cookies" element={<CookiesPage />} />
+    </>
+  );
+}
+
 export default function App() {
   return (
     <Routes>
-      {/* Área pública */}
-      <Route element={<PublicLayout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/agendar" element={<BookingFlowPage />} />
-        <Route path="/agendar/confirmado/:code" element={<ConfirmationPage />} />
-        <Route path="/conta/entrar" element={<ContaLoginPage />} />
-        <Route path="/conta/cadastro" element={<ContaCadastroPage />} />
-        <Route path="/conta/nova-senha" element={<ContaNovaSenhaPage />} />
-        <Route path="/conta" element={<ContaPage />} />
-        <Route path="/termos" element={<TermsPage />} />
-        <Route path="/privacidade" element={<PrivacyPage />} />
-        <Route path="/cookies" element={<CookiesPage />} />
+      {/* Área pública — multi-tenant por slug (URL canônica) */}
+      <Route path="/b/:slug" element={<PublicLayout />}>
+        {PublicTenantRoutes()}
+      </Route>
+
+      {/* Compatibilidade de desenvolvimento: sem slug na URL, resolve
+          pelo DEFAULT_BARBERSHOP_SLUG (ver useBarbershop). Não usar em
+          produção multi-tenant — é só um atalho local/legado. */}
+      <Route path="/" element={<PublicLayout />}>
+        {PublicTenantRoutes()}
       </Route>
 
       {/* Convite de equipe (admin/caixa/barbeiro se autocadastrando) */}

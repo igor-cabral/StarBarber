@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useOutletContext, Link } from 'react-router-dom';
 import { Barbershop, Service, Barber } from '@/types';
+import { publicPath } from '@/utils/publicPath';
 import { getActiveServices, getActiveBarbers } from '@/services/barbershop';
 import { formatPrice, formatDuration } from '@/utils/format';
 import { Card } from '@/components/ui/Card';
@@ -35,7 +36,7 @@ export function HomePage() {
           <p className="max-w-md text-base text-graphite">{barbershop.description}</p>
         )}
         <Link
-          to="/agendar"
+          to={publicPath(barbershop.slug, "/agendar")}
           className="animate-rise-in rounded-xl bg-ink px-7 py-3.5 text-sm font-medium text-paper transition-opacity hover:opacity-90"
         >
           Agendar horário
@@ -113,7 +114,7 @@ export function HomePage() {
           <div className="flex flex-col items-start justify-center gap-3 sm:items-end">
             <p className="text-sm text-graphite sm:text-right">Pronto para renovar o visual?</p>
             <Link
-              to="/agendar"
+              to={publicPath(barbershop.slug, "/agendar")}
               className="rounded-xl bg-ink px-6 py-3 text-sm font-medium text-paper hover:opacity-90"
             >
               Agende seu horário

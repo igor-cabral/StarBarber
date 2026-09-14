@@ -1,13 +1,16 @@
 import { FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { TextField } from '@/components/ui/TextField';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { updatePassword } from '@/services/auth';
 import { friendlyError } from '@/utils/errors';
+import { Barbershop } from '@/types';
+import { publicPath } from '@/utils/publicPath';
 
 export function ContaNovaSenhaPage() {
   const navigate = useNavigate();
+  const { barbershop } = useOutletContext<{ barbershop: Barbershop }>();
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +28,7 @@ export function ContaNovaSenhaPage() {
     try {
       await updatePassword(password);
       setDone(true);
-      setTimeout(() => navigate('/conta/entrar'), 2000);
+      setTimeout(() => navigate(publicPath(barbershop.slug, '/conta/entrar')), 2000);
     } catch (err) {
       setError(friendlyError(err, 'Não foi possível redefinir sua senha. Peça um novo link de recuperação.'));
     } finally {

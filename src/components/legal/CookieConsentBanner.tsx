@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
+import { publicPath } from '@/utils/publicPath';
 
 const STORAGE_KEY = 'cookie_notice_acknowledged';
 
-export function CookieConsentBanner() {
+export function CookieConsentBanner({ slug }: { slug: string }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export function CookieConsentBanner() {
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 sm:flex-row sm:justify-between">
         <p className="text-sm text-graphite">
           Usamos apenas cookies essenciais para manter você logado. Não usamos rastreamento de terceiros. Saiba mais
-          na nossa <Link to="/cookies" className="underline">Política de Cookies</Link>.
+          na nossa <Link to={publicPath(slug, '/cookies')} className="underline">Política de Cookies</Link>.
         </p>
         <Button size="sm" onClick={acknowledge} className="shrink-0">
           Entendi

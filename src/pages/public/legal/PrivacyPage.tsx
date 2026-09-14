@@ -1,12 +1,13 @@
-import { useOutletContext } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 import { Barbershop } from '@/types';
 import { LegalPageLayout } from '@/components/legal/LegalPageLayout';
+import { publicPath } from '@/utils/publicPath';
 
 export function PrivacyPage() {
   const { barbershop } = useOutletContext<{ barbershop: Barbershop }>();
 
   return (
-    <LegalPageLayout title="Política de Privacidade" updatedAt="setembro de 2026">
+    <LegalPageLayout title="Política de Privacidade" updatedAt="setembro de 2026" backTo={publicPath(barbershop.slug)}>
       <p>
         Esta política explica quais dados a <strong>{barbershop.name}</strong> coleta ao usar este sistema de
         agendamento, para que servem, e quais direitos você tem sobre eles, em conformidade com a Lei Geral de
@@ -54,7 +55,7 @@ export function PrivacyPage() {
       </p>
 
       <h2>Seus direitos</h2>
-      <p>Você pode, a qualquer momento, na sua área de conta (<a href="/conta">/conta</a>):</p>
+      <p>Você pode, a qualquer momento, na sua área de conta (<Link to={publicPath(barbershop.slug, "/conta")}>/conta</Link>):</p>
       <ul className="list-disc pl-5">
         <li>Consultar os dados e o histórico de agendamentos vinculados à sua conta</li>
         <li>Baixar uma cópia dos seus dados (portabilidade)</li>
@@ -68,7 +69,7 @@ export function PrivacyPage() {
       <h2>Cookies</h2>
       <p>
         Usamos apenas cookies essenciais de sessão (autenticação). Veja detalhes na nossa{' '}
-        <a href="/cookies">Política de Cookies</a>.
+        <Link to={publicPath(barbershop.slug, "/cookies")}>Política de Cookies</Link>.
       </p>
 
       <h2>Contato</h2>

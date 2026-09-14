@@ -1,13 +1,16 @@
 import { FormEvent, useState } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation, useOutletContext, Link } from 'react-router-dom';
 import { TextField } from '@/components/ui/TextField';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { customerSignUp } from '@/services/customerAuth';
+import { Barbershop } from '@/types';
+import { publicPath } from '@/utils/publicPath';
 
 export function ContaCadastroPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { barbershop } = useOutletContext<{ barbershop: Barbershop }>();
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -17,7 +20,7 @@ export function ContaCadastroPage() {
   const [awaitingConfirmation, setAwaitingConfirmation] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 
-  const redirectTo = (location.state as any)?.from ?? '/conta';
+  const redirectTo = (location.state as any)?.from ?? publicPath(barbershop.slug, '/conta');
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -53,7 +56,7 @@ export function ContaCadastroPage() {
           <p className="text-sm text-graphite">
             Enviamos um link de confirmação para <strong>{email}</strong>. Depois de confirmar, volte e faça login.
           </p>
-          <Link to="/conta/entrar" className="mt-4 inline-block text-sm text-graphite underline">
+          <Link to={publicPath(barbershop.slug, '/conta/entrar')} className="mt-4 inline-block text-sm text-graphite underline">
             Ir para o login
           </Link>
         </Card>
@@ -96,11 +99,11 @@ export function ContaCadastroPage() {
             />
             <span>
               Li e aceito os{' '}
-              <Link to="/termos" target="_blank" className="font-medium text-ink underline">
+              <Link to={publicPath(barbershop.slug, '/termos')} target="_blank" className="font-medium text-ink underline">
                 Termos de Uso
               </Link>{' '}
               e a{' '}
-              <Link to="/privacidade" target="_blank" className="font-medium text-ink underline">
+              <Link to={publicPath(barbershop.slug, '/privacidade')} target="_blank" className="font-medium text-ink underline">
                 Política de Privacidade
               </Link>
               .
@@ -113,7 +116,7 @@ export function ContaCadastroPage() {
 
         <p className="mt-6 text-center text-sm text-graphite">
           Já tem conta?{' '}
-          <Link to="/conta/entrar" state={{ from: redirectTo }} className="font-medium text-ink underline">
+          <Link to={publicPath(barbershop.slug, '/conta/entrar')} state={{ from: redirectTo }} className="font-medium text-ink underline">
             Entrar
           </Link>
         </p>

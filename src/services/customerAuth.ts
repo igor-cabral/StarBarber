@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import { buildConsentMetadata } from '@/utils/legal';
+import { publicPath } from '@/utils/publicPath';
 
 export async function customerSignUp(params: {
   email: string;
@@ -29,9 +30,9 @@ export async function customerSignOut() {
   if (error) throw error;
 }
 
-export async function requestCustomerPasswordReset(email: string) {
+export async function requestCustomerPasswordReset(email: string, slug: string) {
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/conta/nova-senha`,
+    redirectTo: `${window.location.origin}${publicPath(slug, '/conta/nova-senha')}`,
   });
   if (error) throw error;
 }

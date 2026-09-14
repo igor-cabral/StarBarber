@@ -38,6 +38,22 @@ React + Vite + TypeScript + Tailwind CSS + Supabase (Postgres + Auth + RLS) + Re
      ```
    - Acesse `/master/login` com esse usuário. A partir daí, **todo o resto é feito pela interface**: o master cria cada barbearia e gera um link de convite de administrador — não é mais necessário criar o admin da barbearia manualmente pelo SQL Editor.
 
+## Multi-tenant por URL
+
+A área pública é acessada por `/b/:slug/...` — o slug na URL é a fonte de verdade de qual barbearia está sendo exibida:
+
+```
+/b/barbearia-prime
+/b/barbearia-prime/agendar
+/b/barbearia-prime/conta
+```
+
+Cada barbearia cadastrada (`barbershops.slug`) tem sua própria URL. Um slug que não existe mostra uma página 404 dedicada — nunca cai silenciosamente na barbearia padrão.
+
+Para desenvolvimento local, as mesmas rotas também respondem em `/` (sem slug), usando `VITE_DEFAULT_BARBERSHOP_SLUG` do `.env`. Isso é só um atalho de dev — **não é a URL a ser usada em produção multi-tenant**; em produção, sempre compartilhe o link `/b/:slug` correto de cada barbearia.
+
+Rodar `npm run test:routes` valida o roteamento (inclusive isolamento entre slugs) sem precisar de navegador.
+
 ## Como o acesso funciona agora
 
 - **Master** (`/master/login`): cria/bloqueia barbearias, gera convites de administrador, remove o acesso de qualquer usuário do sistema.

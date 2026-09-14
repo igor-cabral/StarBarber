@@ -1,20 +1,23 @@
 import { FormEvent, useState } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation, useOutletContext, Link } from 'react-router-dom';
 import { TextField } from '@/components/ui/TextField';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { customerSignIn, requestCustomerPasswordReset } from '@/services/customerAuth';
+import { Barbershop } from '@/types';
+import { publicPath } from '@/utils/publicPath';
 
 export function ContaLoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { barbershop } = useOutletContext<{ barbershop: Barbershop }>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [resetSent, setResetSent] = useState(false);
 
-  const redirectTo = (location.state as any)?.from ?? '/conta';
+  const redirectTo = (location.state as any)?.from ?? publicPath(barbershop.slug, '/conta');
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -36,7 +39,7 @@ export function ContaLoginPage() {
       return;
     }
     try {
-      await requestCustomerPasswordReset(email);
+      await requestCustomerPasswordReset(email, barbershop.slug);
       setResetSent(true);
     } catch {
       setError('Não foi possível enviar o e-mail de recuperação.');
@@ -70,7 +73,7 @@ export function ContaLoginPage() {
 
         <p className="mt-6 text-center text-sm text-graphite">
           Ainda não tem conta?{' '}
-          <Link to="/conta/cadastro" state={{ from: redirectTo }} className="font-medium text-ink underline">
+          <Link to={publicPath(barbershop.slug, '/conta/cadastro')} state={{ from: redirectTo }} className="font-medium text-ink underline">
             Criar conta
           </Link>
         </p>

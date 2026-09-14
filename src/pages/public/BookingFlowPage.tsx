@@ -8,6 +8,7 @@ import { StepBarber } from './steps/StepBarber';
 import { StepDate } from './steps/StepDate';
 import { StepSlot } from './steps/StepSlot';
 import { StepCustomer } from './steps/StepCustomer';
+import { publicPath } from '@/utils/publicPath';
 import { ArrowLeft } from 'lucide-react';
 
 export function BookingFlowPage() {
@@ -20,7 +21,7 @@ export function BookingFlowPage() {
   }
   function back() {
     if (step === 1) {
-      navigate('/');
+      navigate(publicPath(barbershop.slug));
     } else {
       setStep((s) => s - 1);
     }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useOutletContext, Link } from 'react-router-dom';
+import { publicPath } from '@/utils/publicPath';
 import { Barbershop, Appointment } from '@/types';
 import { getAppointmentByCode } from '@/services/appointments';
 import { LoadingState, ErrorState } from '@/components/ui/States';
@@ -89,7 +90,7 @@ export function ConfirmationPage() {
             </Button>
           </a>
         )}
-        <Link to="/">
+        <Link to={publicPath(barbershop.slug)}>
           <Button variant="ghost" size="lg" fullWidth>
             Voltar para o início
           </Button>

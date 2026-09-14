@@ -1,12 +1,13 @@
-import { useOutletContext } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 import { Barbershop } from '@/types';
 import { LegalPageLayout } from '@/components/legal/LegalPageLayout';
+import { publicPath } from '@/utils/publicPath';
 
 export function TermsPage() {
   const { barbershop } = useOutletContext<{ barbershop: Barbershop }>();
 
   return (
-    <LegalPageLayout title="Termos de Uso" updatedAt="setembro de 2026">
+    <LegalPageLayout title="Termos de Uso" updatedAt="setembro de 2026" backTo={publicPath(barbershop.slug)}>
       <p>
         Estes termos regem o uso do sistema de agendamento online da <strong>{barbershop.name}</strong>. Ao criar
         uma conta, você concorda com o que está descrito aqui.
@@ -30,7 +31,7 @@ export function TermsPage() {
       <ul className="list-disc pl-5">
         <li>Um agendamento só é confirmado quando o sistema emite um código de confirmação.</li>
         <li>
-          Você pode cancelar ou remarcar seus próprios agendamentos pela área <a href="/conta">Minha conta</a>,
+          Você pode cancelar ou remarcar seus próprios agendamentos pela área <Link to={publicPath(barbershop.slug, "/conta")}>Minha conta</Link>,
           respeitando a disponibilidade de horários no momento.
         </li>
         <li>
@@ -56,7 +57,7 @@ export function TermsPage() {
 
       <h2>Seus dados</h2>
       <p>
-        O tratamento dos seus dados pessoais está descrito na nossa <a href="/privacidade">Política de Privacidade</a>.
+        O tratamento dos seus dados pessoais está descrito na nossa <Link to={publicPath(barbershop.slug, "/privacidade")}>Política de Privacidade</Link>.
       </p>
 
       <h2>Alterações destes termos</h2>

@@ -9,6 +9,7 @@ import {
 } from '@/services/customerPortal';
 import { customerSignOut } from '@/services/customerAuth';
 import { Appointment, Barbershop } from '@/types';
+import { publicPath } from '@/utils/publicPath';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -34,7 +35,7 @@ export function ContaPage() {
 
   // nunca decide "não logado" enquanto a sessão ainda está carregando
   if (status === 'loading') return <LoadingState label="Carregando sua conta…" />;
-  if (status === 'unauthenticated') return <Navigate to="/conta/entrar" state={{ from: '/conta' }} replace />;
+  if (status === 'unauthenticated') return <Navigate to={publicPath(barbershop.slug, '/conta/entrar')} state={{ from: publicPath(barbershop.slug, '/conta') }} replace />;
   if (!appointments && !error) return <LoadingState label="Carregando seus agendamentos…" />;
   if (error) return <ErrorState message={error} />;
 
@@ -176,11 +177,11 @@ export function ContaPage() {
         </div>
         <p className="text-xs text-graphite">
           Veja também a{' '}
-          <Link to="/privacidade" className="underline">
+          <Link to={publicPath(barbershop.slug, '/privacidade')} className="underline">
             Política de Privacidade
           </Link>{' '}
           e os{' '}
-          <Link to="/termos" className="underline">
+          <Link to={publicPath(barbershop.slug, '/termos')} className="underline">
             Termos de Uso
           </Link>
           .

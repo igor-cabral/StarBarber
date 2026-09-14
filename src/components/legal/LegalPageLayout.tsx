@@ -4,15 +4,17 @@ import { Link } from 'react-router-dom';
 export function LegalPageLayout({
   title,
   updatedAt,
+  backTo,
   children,
 }: {
   title: string;
   updatedAt: string;
+  backTo: string;
   children: ReactNode;
 }) {
   return (
     <div className="mx-auto max-w-2xl px-5 py-12">
-      <Link to="/" className="text-sm text-graphite hover:text-ink">
+      <Link to={backTo} className="text-sm text-graphite hover:text-ink">
         ← Voltar ao início
       </Link>
       <h1 className="mb-1 mt-4 font-display text-2xl font-semibold tracking-tight">{title}</h1>

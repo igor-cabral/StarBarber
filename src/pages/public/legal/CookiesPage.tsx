@@ -1,8 +1,13 @@
+import { useOutletContext } from 'react-router-dom';
+import { Barbershop } from '@/types';
 import { LegalPageLayout } from '@/components/legal/LegalPageLayout';
+import { publicPath } from '@/utils/publicPath';
 
 export function CookiesPage() {
+  const { barbershop } = useOutletContext<{ barbershop: Barbershop }>();
+
   return (
-    <LegalPageLayout title="Política de Cookies" updatedAt="setembro de 2026">
+    <LegalPageLayout title="Política de Cookies" updatedAt="setembro de 2026" backTo={publicPath(barbershop.slug)}>
       <p>
         Cookies são pequenos arquivos guardados pelo seu navegador. Usamos o mínimo possível, e explicamos aqui
         exatamente o que cada um faz.
