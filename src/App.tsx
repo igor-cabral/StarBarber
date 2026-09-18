@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { PublicLayout } from '@/layouts/PublicLayout';
 import { AdminLayout } from '@/layouts/AdminLayout';
 import { MasterLayout } from '@/layouts/MasterLayout';
+import { LandingPage } from '@/pages/LandingPage';
 import { HomePage } from '@/pages/public/HomePage';
 import { BookingFlowPage } from '@/pages/public/BookingFlowPage';
 import { ConfirmationPage } from '@/pages/public/ConfirmationPage';
@@ -28,10 +29,9 @@ import { MasterLoginPage } from '@/pages/master/MasterLoginPage';
 import { MasterDashboardPage } from '@/pages/master/MasterDashboardPage';
 
 /**
- * Rotas públicas de uma barbearia — reaproveitadas tanto em
- * /b/:slug/* (multi-tenant "de verdade") quanto em /* (compatibilidade
- * de desenvolvimento, resolvendo pelo DEFAULT_BARBERSHOP_SLUG dentro
- * de useBarbershop). Definidas uma única vez para não duplicar lógica.
+ * Rotas públicas de uma barbearia — montadas em /b/:slug/* (a URL
+ * canônica multi-tenant). "/" NÃO usa mais essas rotas: é a landing
+ * page do SaaS StarBarber, independente de qualquer tenant.
  */
 function PublicTenantRoutes() {
   return (
@@ -53,15 +53,11 @@ function PublicTenantRoutes() {
 export default function App() {
   return (
     <Routes>
-      {/* Área pública — multi-tenant por slug (URL canônica) */}
-      <Route path="/b/:slug" element={<PublicLayout />}>
-        {PublicTenantRoutes()}
-      </Route>
+      {/* Landing page oficial do SaaS StarBarber — não pertence a nenhum tenant */}
+      <Route path="/" element={<LandingPage />} />
 
-      {/* Compatibilidade de desenvolvimento: sem slug na URL, resolve
-          pelo DEFAULT_BARBERSHOP_SLUG (ver useBarbershop). Não usar em
-          produção multi-tenant — é só um atalho local/legado. */}
-      <Route path="/" element={<PublicLayout />}>
+      {/* Área pública de cada barbearia — multi-tenant por slug (URL canônica) */}
+      <Route path="/b/:slug" element={<PublicLayout />}>
         {PublicTenantRoutes()}
       </Route>
 

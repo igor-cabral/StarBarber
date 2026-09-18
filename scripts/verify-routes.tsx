@@ -33,10 +33,8 @@ function PublicTenantRoutes() {
 
 const tree = (
   <>
+    <Route path="/" element={<div />} />
     <Route path="/b/:slug" element={<PublicLayout />}>
-      {PublicTenantRoutes()}
-    </Route>
-    <Route path="/" element={<PublicLayout />}>
       {PublicTenantRoutes()}
     </Route>
     <Route path="/convite/:token" element={<div />} />
@@ -63,6 +61,7 @@ const tree = (
 const routes = createRoutesFromChildren(tree);
 
 const cases: [string, string][] = [
+  ['/', 'LandingPage (SaaS StarBarber, sem tenant)'],
   ['/b/barbearia-prime', 'HomePage (slug=barbearia-prime)'],
   ['/b/barbearia-prime/agendar', 'BookingFlowPage (slug=barbearia-prime)'],
   ['/b/barbearia-prime/agendar/confirmado/AGD-123', 'ConfirmationPage'],
@@ -76,8 +75,6 @@ const cases: [string, string][] = [
   ['/b/outro-slug', 'HomePage (slug=outro-slug)'],
   ['/b/outro-slug/agendar', 'BookingFlowPage (slug=outro-slug)'],
   ['/b/outro-slug/conta', 'ContaPage (slug=outro-slug)'],
-  ['/', 'HomePage (fallback dev, sem slug)'],
-  ['/agendar', 'BookingFlowPage (fallback dev, sem slug)'],
   ['/convite/abc123', 'InviteRedeemPage (não tenant-scoped)'],
   ['/admin', 'AdminLayout index (DashboardPage)'],
   ['/admin/agenda', 'AdminLayout > AgendaPage'],
@@ -98,6 +95,16 @@ for (const [path, expectedLabel] of cases) {
   console.log(
     `PASS: ${path.padEnd(45)} -> casou (slug param = ${slugParam ?? '—'}) [${expectedLabel}]`
   );
+}
+
+// "/" nunca deve carregar slug nenhum — é a landing, não uma barbearia
+const rootMatch = matchRoutes(routes, '/');
+const rootHasSlug = rootMatch?.some((m) => m.params.slug);
+if (rootMatch && !rootHasSlug) {
+  console.log('PASS: "/" não resolve nenhum slug de tenant (é a landing do SaaS)');
+} else {
+  console.log('FAIL: "/" está resolvendo um slug de tenant — não deveria!');
+  allOk = false;
 }
 
 // Teste de isolamento: dois slugs diferentes devem produzir params.slug diferentes,
