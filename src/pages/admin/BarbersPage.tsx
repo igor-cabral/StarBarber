@@ -9,6 +9,7 @@ import { TextField } from '@/components/ui/TextField';
 import { LoadingState, ErrorState, EmptyState } from '@/components/ui/States';
 import { Plus, Pencil, Trash2, X } from 'lucide-react';
 import { friendlyError } from '@/utils/errors';
+import { MediaUpload } from '@/components/admin/MediaUpload';
 
 type FormState = (Partial<Barber> & { serviceIds?: string[] }) | null;
 
@@ -37,6 +38,7 @@ export function BarbersPage() {
       description: form.description ?? null,
       specialties: form.specialties ?? [],
       active: form.active ?? true,
+      photo_url: form.photo_url ?? null,
     } as any);
     if (form.serviceIds) {
       await setBarberServices(saved.id, form.serviceIds);
@@ -105,6 +107,7 @@ export function BarbersPage() {
               </button>
             </div>
             <div className="flex flex-col gap-4">
+              <MediaUpload barbershopId={profile.barbershop_id} category="barbers" value={form.photo_url} onChange={(photo_url) => setForm({ ...form, photo_url })} />
               <TextField label="Nome" value={form.name ?? ''} onChange={(e) => setForm({ ...form, name: e.target.value })} />
               <TextField
                 label="Descrição"

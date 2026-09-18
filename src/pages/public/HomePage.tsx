@@ -51,7 +51,9 @@ export function HomePage() {
         {services && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {services.map((service) => (
-              <Card key={service.id} className="flex flex-col gap-3 p-5">
+              <Card key={service.id} className="flex flex-col gap-3 overflow-hidden p-0">
+                {service.photo_url && <img src={service.photo_url} alt={service.name} className="aspect-[16/10] w-full object-cover" />}
+                <div className="flex flex-1 flex-col gap-3 p-5">
                 <h3 className="font-medium text-ink">{service.name}</h3>
                 {service.description && <p className="text-sm text-graphite">{service.description}</p>}
                 <div className="mt-auto flex items-center justify-between pt-2 text-sm">
@@ -59,6 +61,7 @@ export function HomePage() {
                   <span className="flex items-center gap-1 text-graphite">
                     <Clock3 size={14} /> {formatDuration(service.duration_minutes)}
                   </span>
+                </div>
                 </div>
               </Card>
             ))}

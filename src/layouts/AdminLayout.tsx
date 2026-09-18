@@ -14,6 +14,8 @@ import {
   LogOut,
   UserCog,
   ShieldAlert,
+  Package,
+  ShoppingCart,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { signOut } from '@/services/auth';
@@ -28,6 +30,8 @@ const NAV_ITEMS: { to: string; label: string; icon: any; end?: boolean; roles: S
   { to: '/admin/agendamentos', label: 'Agendamentos', icon: ListChecks, roles: ['admin', 'caixa', 'barbeiro'] },
   { to: '/admin/clientes', label: 'Clientes', icon: Users, roles: ['admin', 'caixa'] },
   { to: '/admin/servicos', label: 'Serviços', icon: Scissors, roles: ['admin'] },
+  { to: '/admin/produtos', label: 'Produtos', icon: Package, roles: ['admin'] },
+  { to: '/admin/caixa', label: 'Frente de caixa', icon: ShoppingCart, roles: ['admin', 'caixa'] },
   { to: '/admin/profissionais', label: 'Profissionais', icon: UserSquare2, roles: ['admin'] },
   { to: '/admin/horarios', label: 'Horários', icon: Clock, roles: ['admin'] },
   { to: '/admin/equipe', label: 'Equipe', icon: UserCog, roles: ['admin'] },

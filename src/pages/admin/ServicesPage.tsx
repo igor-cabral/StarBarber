@@ -10,6 +10,7 @@ import { LoadingState, ErrorState, EmptyState } from '@/components/ui/States';
 import { formatPrice, formatDuration } from '@/utils/format';
 import { Plus, Pencil, Trash2, X } from 'lucide-react';
 import { friendlyError } from '@/utils/errors';
+import { MediaUpload } from '@/components/admin/MediaUpload';
 
 type FormState = Partial<Service> | null;
 
@@ -102,6 +103,7 @@ export function ServicesPage() {
               </button>
             </div>
             <div className="flex flex-col gap-4">
+              <MediaUpload barbershopId={profile.barbershop_id} category="services" value={form.photo_url} onChange={(photo_url) => setForm({ ...form, photo_url })} />
               <TextField
                 label="Nome"
                 value={form.name ?? ''}

@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import { Appointment } from '@/types';
+import { listMyProductReservations, listMySales } from '@/services/commerce';
 
 export async function listMyAppointments(): Promise<Appointment[]> {
   const { data, error } = await supabase
@@ -29,7 +30,7 @@ export async function exportMyData(): Promise<Record<string, unknown>> {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const appointments = await listMyAppointments();
+  const [appointments, reservations, purchases] = await Promise.all([listMyAppointments(), listMyProductReservations(), listMySales()]);
 
   return {
     conta: {
@@ -45,6 +46,19 @@ export async function exportMyData(): Promise<Record<string, unknown>> {
       inicio: a.starts_at,
       status: a.status,
       valor_centavos: a.price_cents,
+    })),
+    reservas_de_produtos: reservations.map((r) => ({
+      codigo: r.code,
+      status: r.status,
+      criado_em: r.created_at,
+      expira_em: r.expires_at,
+      itens: r.items?.map((i) => ({ produto: i.product?.name, quantidade: i.quantity, valor_unitario_centavos: i.unit_price_cents })),
+    })),
+    compras: purchases.map((s) => ({
+      criado_em: s.created_at,
+      forma_pagamento: s.payment_method,
+      total_centavos: s.total_cents,
+      itens: s.items?.map((i) => ({ descricao: i.description, quantidade: i.quantity, total_centavos: i.total_cents })),
     })),
     exportado_em: new Date().toISOString(),
   };

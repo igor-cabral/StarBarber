@@ -136,3 +136,90 @@ export interface Invite {
   created_at: string;
   expires_at: string;
 }
+
+export interface Product {
+  id: string;
+  barbershop_id: string;
+  name: string;
+  description: string | null;
+  sku: string | null;
+  price_cents: number;
+  stock_quantity: number;
+  low_stock_threshold: number;
+  photo_url: string | null;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+  reserved_quantity?: number;
+  available_quantity?: number;
+}
+
+export type ProductReservationStatus = 'reserved' | 'ready' | 'fulfilled' | 'cancelled' | 'expired';
+
+export interface ProductReservationItem {
+  id: string;
+  reservation_id: string;
+  product_id: string;
+  quantity: number;
+  unit_price_cents: number;
+  description: string;
+  product?: Product;
+}
+
+export interface ProductReservation {
+  id: string;
+  barbershop_id: string;
+  customer_id: string;
+  code: string;
+  status: ProductReservationStatus;
+  notes: string | null;
+  expires_at: string;
+  created_at: string;
+  updated_at: string;
+  items?: ProductReservationItem[];
+  customer?: Customer;
+}
+
+export type PaymentMethod = 'cash' | 'pix' | 'credit_card' | 'debit_card' | 'other';
+
+export interface CashRegisterSession {
+  id: string;
+  barbershop_id: string;
+  opened_by: string;
+  closed_by: string | null;
+  opening_balance_cents: number;
+  closing_balance_cents: number | null;
+  opened_at: string;
+  closed_at: string | null;
+  notes: string | null;
+}
+
+export interface SaleItem {
+  id: string;
+  sale_id: string;
+  item_type: 'product' | 'service';
+  product_id: string | null;
+  service_id: string | null;
+  description: string;
+  quantity: number;
+  unit_price_cents: number;
+  total_cents: number;
+}
+
+export interface Sale {
+  id: string;
+  barbershop_id: string;
+  cash_session_id: string | null;
+  customer_id: string | null;
+  appointment_id: string | null;
+  reservation_id: string | null;
+  sold_by: string | null;
+  payment_method: PaymentMethod;
+  subtotal_cents: number;
+  discount_cents: number;
+  total_cents: number;
+  notes: string | null;
+  created_at: string;
+  items?: SaleItem[];
+  customer?: Customer;
+}

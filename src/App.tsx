@@ -27,6 +27,9 @@ import { TeamPage } from '@/pages/admin/TeamPage';
 import { SettingsPage } from '@/pages/admin/SettingsPage';
 import { MasterLoginPage } from '@/pages/master/MasterLoginPage';
 import { MasterDashboardPage } from '@/pages/master/MasterDashboardPage';
+import { ProductsPage } from '@/pages/admin/ProductsPage';
+import { PosPage } from '@/pages/admin/PosPage';
+import { StorePage } from '@/pages/public/StorePage';
 
 /**
  * Rotas públicas de uma barbearia — montadas em /b/:slug/* (a URL
@@ -43,6 +46,7 @@ function PublicTenantRoutes() {
       <Route path="conta/cadastro" element={<ContaCadastroPage />} />
       <Route path="conta/nova-senha" element={<ContaNovaSenhaPage />} />
       <Route path="conta" element={<ContaPage />} />
+      <Route path="loja" element={<StorePage />} />
       <Route path="termos" element={<TermsPage />} />
       <Route path="privacidade" element={<PrivacyPage />} />
       <Route path="cookies" element={<CookiesPage />} />
@@ -75,6 +79,8 @@ export default function App() {
         <Route path="agendamentos" element={<AppointmentsPage />} />
         <Route path="clientes" element={<ClientsPage />} />
         <Route path="servicos" element={<ServicesPage />} />
+        <Route path="produtos" element={<ProductsPage />} />
+        <Route path="caixa" element={<PosPage />} />
         <Route path="profissionais" element={<BarbersPage />} />
         <Route path="horarios" element={<WorkingHoursPage />} />
         <Route path="equipe" element={<TeamPage />} />
